@@ -1,0 +1,9 @@
+{
+  "name": "chalecitos-backend",
+  "version": "1.0.0",
+  "description": "Secure backend for Los Chalecitos cabin management",
+  "private": true,
+  "engines": {
+    "node": "24.x"
+  }
+}
