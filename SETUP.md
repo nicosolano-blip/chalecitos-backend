@@ -5,7 +5,7 @@
 ```
 SUPABASE_URL = https://enmskpcdfqopatpumcji.supabase.co
 SUPABASE_PUBLISHABLE = sb_publishable_XUEJ_9iFTsrynkOFTUvbRQ_04IQ6o7Q
-SUPABASE_SECRET = sb_secret_FZoENLSAA0WfsQ7wf6N4MQ_6NvD3hYa
+SUPABASE_SECRET = [TU_SUPABASE_SECRET_KEY]
 JWT_SECRET = tu-secret-key-aqui (genera uno aleatorio)
 ```
 
@@ -110,7 +110,7 @@ En tu proyecto de Vercel, ve a **Settings → Environment Variables**
 Añade:
 ```
 SUPABASE_URL = https://enmskpcdfqopatpumcji.supabase.co
-SUPABASE_SECRET = sb_secret_FZoENLSAA0WfsQ7wf6N4MQ_6NvD3hYa
+SUPABASE_SECRET = [TU_SUPABASE_SECRET_KEY]
 JWT_SECRET = [tu-clave-generada]
 NODE_ENV = production
 ```
@@ -192,3 +192,4 @@ Si algo falla:
 2. ✅ Generar JWT_SECRET
 3. ✅ Deploy en Vercel con environment variables
 4. ✅ Actualizar HTML con nuevas URLs de API
+

@@ -69,7 +69,7 @@ Añade estas 3:
 | Variable | Valor |
 |----------|-------|
 | `SUPABASE_URL` | `https://enmskpcdfqopatpumcji.supabase.co` |
-| `SUPABASE_SECRET` | `sb_secret_FZoENLSAA0WfsQ7wf6N4MQ_6NvD3hYa` |
+| `SUPABASE_SECRET` | `[TU_SUPABASE_SECRET_KEY]` |
 | `JWT_SECRET` | `[El que generaste en PASO 2]` |
 
 Click en cada campo y pega el valor correcto.
@@ -313,3 +313,4 @@ Si algo falla:
 **¡Ya está!** 🎉
 
 Tu plataforma ahora es segura, con contraseñas hasheadas y datos en la nube.
+
