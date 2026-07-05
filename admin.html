@@ -820,7 +820,7 @@ textarea.fi{resize:vertical;min-height:60px}
 /* ── USUARIOS ────────────────────────────────────── */
 // ── SINCRONIZACIÓN ──────────────────────────────
 var SYNC_CONFIG = {
-  API_URL: 'https://chalecitos-sync.vercel.app', // ← REEMPLAZA CON TU URL DE VERCEL
+  API_URL: 'https://chalecitos-backend-92dm.vercel.app',
   BETY_TOKEN: 'bety_token_2024',
   MAXI_TOKEN: 'maxi_token_2024'
 };
@@ -1925,10 +1925,17 @@ function syncDown(){
     method:'GET',
     headers:{'Authorization':'Bearer '+CURRENT_SYNC_TOKEN}
   }).then(function(r){return r.json();}).then(function(d){
-    if(d.data && d.data.reservations && d.data.reservations.length>0){
-      DB=d.data.reservations;
+    if(d.data && d.data.reservations && Array.isArray(d.data.reservations)){
+      // Mergear sin borrar: solo agregar/actualizar ids que existan en la nube
+      var cloudRes=d.data.reservations;
+      var localIds=DB.map(function(r){return r.id;});
+      cloudRes.forEach(function(cr){
+        var idx=DB.findIndex(function(lr){return lr.id===cr.id;});
+        if(idx<0) DB.push(cr); // Nueva en la nube
+        else DB[idx]=cr; // Actualizar si existe
+      });
       localStorage.setItem('chalecitos_v1',JSON.stringify(DB));
-      console.log('📥 Datos sincronizados desde la nube');
+      console.log('📥 Datos sincronizados (mergeado)');
       renderCal(); renderLista();
     }
   }).catch(function(e){console.error('❌ Error cargando:',e);});
