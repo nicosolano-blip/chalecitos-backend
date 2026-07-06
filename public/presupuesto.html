@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Presupuesto Grupos — Los Chalecitos</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lora:wght@600;700&family=DM+Sans:wght@400;500;600&display=swap">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: #f7f3ee;
+      color: #2d1b0e;
+      padding: 2rem 1rem;
+    }
+    .container { max-width: 900px; margin: 0 auto; }
+    h1 {
+      font-family: 'Lora', serif;
+      color: #7a3520;
+      margin-bottom: 2rem;
+      text-align: center;
+    }
+    .card {
+      background: white;
+      border: 1px solid #e0cfc0;
+      border-radius: 12px;
+      padding: 2rem;
+      margin-bottom: 2rem;
+      box-shadow: 0 1px 3px rgba(0,0,0,.08);
+    }
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+    label {
+      display: block;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: #6b4f3a;
+      text-transform: uppercase;
+      margin-bottom: 0.5rem;
+      letter-spacing: 0.08em;
+    }
+    input, select {
+      width: 100%;
+      padding: 0.65rem 0.75rem;
+      border: 1.5px solid #e0cfc0;
+      border-radius: 8px;
+      font-size: 1rem;
+      color: #2d1b0e;
+      background: white;
+      font-family: inherit;
+    }
+    input:focus, select:focus {
+      outline: none;
+      border-color: #b85c38;
+      box-shadow: 0 0 0 3px rgba(184,92,56,.15);
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+    button {
+      width: 100%;
+      background: #b85c38;
+      color: white;
+      padding: 0.7rem;
+      border: none;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    button:hover { background: #7a3520; }
+    .resultado {
+      background: #faf6f0;
+      border: 2px solid #f2e0d8;
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-top: 2rem;
+      display: none;
+    }
+    .resultado.show { display: block; }
+    .resultado h3 {
+      font-family: 'Lora', serif;
+      color: #7a3520;
+      margin-bottom: 1rem;
+    }
+    .resultado-item {
+      display: flex;
+      justify-content: space-between;
+      padding: 0.75rem 0;
+      border-bottom: 1px solid #e0cfc0;
+    }
+    .resultado-item:last-child { border-bottom: none; }
+    .resultado-valor {
+      font-family: 'Lora', serif;
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: #b85c38;
+    }
+    .volver {
+      text-align: center;
+      margin-top: 2rem;
+    }
+    .volver a {
+      color: #b85c38;
+      text-decoration: none;
+      font-weight: 600;
+    }
+    .volver a:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h1>💰 Presupuesto para Grupos</h1>
+
+  <div class="card">
+    <div class="form-group">
+      <label>Nombre del grupo / Institución</label>
+      <input type="text" id="nombre" placeholder="Ej: Colegio San Martín">
+    </div>
+
+    <div class="grid">
+      <div class="form-group">
+        <label>Check-in</label>
+        <input type="date" id="checkIn">
+      </div>
+      <div class="form-group">
+        <label>Check-out</label>
+        <input type="date" id="checkOut">
+      </div>
+    </div>
+
+    <div class="grid">
+      <div class="form-group">
+        <label>Total de personas</label>
+        <input type="number" id="personas" placeholder="8" min="1" value="8">
+      </div>
+      <div class="form-group">
+        <label>Precio por persona ($)</label>
+        <input type="number" id="precioPersona" placeholder="150" min="0" step="10">
+      </div>
+    </div>
+
+    <button onclick="calcular()">📊 Calcular Presupuesto</button>
+  </div>
+
+  <div class="resultado" id="resultado">
+    <h3>Presupuesto Final</h3>
+    <div class="resultado-item">
+      <span>Noches:</span>
+      <span id="resNoches"></span>
+    </div>
+    <div class="resultado-item">
+      <span>Total personas:</span>
+      <span id="resPersonas"></span>
+    </div>
+    <div class="resultado-item">
+      <span>Precio por persona:</span>
+      <span>$<span id="resPrecioPersona"></span></span>
+    </div>
+    <div class="resultado-item" style="border: none; margin-top: 1rem; padding: 1rem; background: #fff; border-radius: 8px;">
+      <strong>TOTAL A PAGAR:</strong>
+      <span class="resultado-valor">$<span id="resTotal"></span></span>
+    </div>
+
+    <div style="display: flex; gap: 0.5rem; margin-top: 1.5rem; flex-wrap: wrap;">
+      <button onclick="descargarPDF()" style="background: #1a5fa8; flex: 1; min-width: 150px;">📥 Descargar PDF</button>
+      <button onclick="copiarPresupuesto()" style="background: #2c5f2e; flex: 1; min-width: 150px;">📋 Copiar</button>
+      <button onclick="compartirWhatsApp()" style="background: #25d366; flex: 1; min-width: 150px;">💬 WhatsApp</button>
+    </div>
+  </div>
+
+  <div class="volver">
+    <a href="/" onclick="window.history.back(); return false;">← Volver al panel</a>
+  </div>
+</div>
+
+<script>
+function calcular() {
+  const nombre = document.getElementById('nombre').value;
+  const checkIn = new Date(document.getElementById('checkIn').value);
+  const checkOut = new Date(document.getElementById('checkOut').value);
+  const personas = parseInt(document.getElementById('personas').value) || 0;
+  const precioPersona = parseFloat(document.getElementById('precioPersona').value) || 0;
+
+  if (!nombre || !checkIn || !checkOut || personas <= 0 || precioPersona <= 0) {
+    alert('Completa todos los campos');
+    return;
+  }
+
+  const noches = Math.max(1, Math.ceil((checkOut - checkIn) / (1000 * 60 * 60 * 24)));
+  const total = noches * personas * precioPersona;
+
+  document.getElementById('resNoches').textContent = noches;
+  document.getElementById('resPersonas').textContent = personas;
+  document.getElementById('resPrecioPersona').textContent = precioPersona.toFixed(2);
+  document.getElementById('resTotal').textContent = total.toFixed(2);
+
+  document.getElementById('resultado').classList.add('show');
+}
+
+// Descargar como PDF
+function descargarPDF() {
+  const nombre = document.getElementById('nombre').value;
+  const checkIn = document.getElementById('checkIn').value;
+  const checkOut = document.getElementById('checkOut').value;
+  const noches = document.getElementById('resNoches').textContent;
+  const personas = document.getElementById('resPersonas').textContent;
+  const precio = document.getElementById('resPrecioPersona').textContent;
+  const total = document.getElementById('resTotal').textContent;
+
+  const contenido = `PRESUPUESTO - LOS CHALECITOS\n\n` +
+    `Grupo: ${nombre}\n` +
+    `Check-in: ${checkIn}\n` +
+    `Check-out: ${checkOut}\n\n` +
+    `Noches: ${noches}\n` +
+    `Total Personas: ${personas}\n` +
+    `Precio por Persona: $${precio}\n\n` +
+    `================================\n` +
+    `TOTAL A PAGAR: $${total}\n` +
+    `================================\n\n` +
+    `Generado: ${new Date().toLocaleDateString('es-AR')}`;
+
+  const blob = new Blob([contenido], { type: 'text/plain' });
+  const url = window.URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `presupuesto-${nombre.replace(/\s+/g, '-')}.txt`;
+  a.click();
+  window.URL.revokeObjectURL(url);
+}
+
+// Copiar presupuesto al portapapeles
+function copiarPresupuesto() {
+  const nombre = document.getElementById('nombre').value;
+  const noches = document.getElementById('resNoches').textContent;
+  const personas = document.getElementById('resPersonas').textContent;
+  const precio = document.getElementById('resPrecioPersona').textContent;
+  const total = document.getElementById('resTotal').textContent;
+
+  const texto = `PRESUPUESTO - LOS CHALECITOS\n\n` +
+    `Grupo: ${nombre}\n` +
+    `Noches: ${noches}\n` +
+    `Personas: ${personas}\n` +
+    `Precio/persona: $${precio}\n\n` +
+    `TOTAL: $${total}`;
+
+  navigator.clipboard.writeText(texto).then(() => {
+    alert('✅ Presupuesto copiado al portapapeles');
+  });
+}
+
+// Compartir por WhatsApp
+function compartirWhatsApp() {
+  const nombre = document.getElementById('nombre').value;
+  const noches = document.getElementById('resNoches').textContent;
+  const personas = document.getElementById('resPersonas').textContent;
+  const precio = document.getElementById('resPrecioPersona').textContent;
+  const total = document.getElementById('resTotal').textContent;
+
+  const mensaje = `*PRESUPUESTO - LOS CHALECITOS*\n\n` +
+    `Grupo: ${nombre}\n` +
+    `Noches: ${noches}\n` +
+    `Personas: ${personas}\n` +
+    `Precio/persona: $${precio}\n\n` +
+    `*TOTAL A PAGAR: $${total}*`;
+
+  const url = `https://wa.me/?text=${encodeURIComponent(mensaje)}`;
+  window.open(url, '_blank');
+}
+
+// Enter para calcular
+document.addEventListener('keypress', function(e) {
+  if (e.key === 'Enter') calcular();
+});
+</script>
+
+</body>
+</html>
