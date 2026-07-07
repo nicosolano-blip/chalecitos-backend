@@ -1401,6 +1401,8 @@ function updateGrupoCounters(){
     var inp=q('.r-grupo-pers[data-cab="'+chk.value+'"]');
     if(inp) inp.disabled=false;
     var pers=parseInt(inp.value)||0;
+    pers=Math.max(0,Math.min(pers,total));
+    inp.value=pers;
     ubicadas+=pers;
   });
   qa('.r-grupo-cab:not(:checked)').forEach(function(chk){
@@ -1408,11 +1410,11 @@ function updateGrupoCounters(){
     if(inp){inp.value='';inp.disabled=true;}
   });
   var faltan=Math.max(0,total-ubicadas);
-  q('#r-grupo-ubicadas').textContent=ubicadas;
-  q('#r-grupo-total-show').textContent=total;
-  q('#r-grupo-faltan').textContent=faltan;
+  if(q('#r-grupo-ubicadas')) q('#r-grupo-ubicadas').textContent=ubicadas;
+  if(q('#r-grupo-total-show')) q('#r-grupo-total-show').textContent=total;
+  if(q('#r-grupo-faltan')) q('#r-grupo-faltan').textContent=faltan;
   var precioTot=(total||0)*(parseFloat(q('#r-grupo-precio-pers').value)||0);
-  q('#r-total').value=precioTot||'';
+  if(q('#r-total')) q('#r-total').value=precioTot||'';
 }
 window.updateGrupoCounters=updateGrupoCounters;
 
